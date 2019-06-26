@@ -41,7 +41,9 @@
 static struct device *apr_dev_ptr;
 static struct apr_q6 q6;
 static struct apr_client client[APR_DEST_MAX][APR_CLIENT_MAX];
+#ifdef CONFIG_IPC_LOGGING
 static void *apr_pkt_ctx;
+#endif
 static wait_queue_head_t dsp_wait;
 static wait_queue_head_t modem_wait;
 static bool is_modem_up;
@@ -1153,7 +1155,8 @@ static int apr_probe(struct platform_device *pdev)
 	apr_reset_workqueue = create_singlethread_workqueue("apr_driver");
 	if (!apr_reset_workqueue)
 		return -ENOMEM;
-
+	}
+#ifdef CONFIG_IPC_LOGGING
 	apr_pkt_ctx = ipc_log_context_create(APR_PKT_IPC_LOG_PAGE_CNT,
 						"apr", 0);
 	if (!apr_pkt_ctx)
@@ -1164,6 +1167,31 @@ static int apr_probe(struct platform_device *pdev)
 			      &adsp_service_nb);
 	subsys_notif_register("apr_modem", AUDIO_NOTIFIER_MODEM_DOMAIN,
 			      &modem_service_nb);
+#endif
+	spin_lock(&apr_priv->apr_lock);
+	apr_priv->is_initial_boot = true;
+	spin_unlock(&apr_priv->apr_lock);
+	ret = of_property_read_string(pdev->dev.of_node,
+				      "qcom,subsys-name",
+				      (const char **)(&subsys_name));
+	if (ret) {
+		pr_err("%s: missing subsys-name entry in dt node\n", __func__);
+		return -EINVAL;
+	}
+
+	if (!strcmp(subsys_name, "apr_adsp")) {
+		subsys_notif_register("apr_adsp",
+				       AUDIO_NOTIFIER_ADSP_DOMAIN,
+				       &adsp_service_nb);
+	} else if (!strcmp(subsys_name, "apr_modem")) {
+		subsys_notif_register("apr_modem",
+				       AUDIO_NOTIFIER_MODEM_DOMAIN,
+				       &modem_service_nb);
+	} else {
+		pr_err("%s: invalid subsys-name %s\n", __func__, subsys_name);
+		return -EINVAL;
+	}
+>>>>>>> f8c9e4ed6f59 (treewide: Silence IPC logging spams)
 
 	apr_tal_init();
 	apr_dev_ptr = &pdev->dev;

@@ -352,6 +352,140 @@ static suspend_state_t decode_state(const char *buf, size_t n)
 	return PM_SUSPEND_ON;
 }
 
+static inline u32
+decay_val(u32 val, u32 percent)
+{
+	u32 ratio;
+
+	percent = clamp(percent, 0U, 100U);
+	ratio = 1024 - ((1024 * percent) / 100);
+
+	return (val * ratio) / 1024;
+}
+
+static ssize_t sbo_decay_value_store(struct kobject *kobj,
+				struct kobj_attribute *attr,
+				const char *buf, size_t n)
+{
+	unsigned long val;
+
+	if (kstrtoul(buf, 10, &val))
+		return -EINVAL;
+
+	if (val > 100)
+		return -EINVAL;
+
+	sbo_decay_value = val;
+	return n;
+}
+
+static ssize_t sbo_decay_value_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%u\n", sbo_decay_value);
+}
+
+power_attr(sbo_decay_value);
+
+static ssize_t sbo_short_sleep_msecs_store(struct kobject *kobj,
+				struct kobj_attribute *attr,
+				const char *buf, size_t n)
+{
+	unsigned long val;
+
+	if (kstrtoul(buf, 10, &val))
+		return -EINVAL;
+
+	sbo_short_sleep_msecs = val;
+	return n;
+}
+
+static ssize_t sbo_short_sleep_msecs_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%u\n", sbo_short_sleep_msecs);
+}
+
+power_attr(sbo_short_sleep_msecs);
+
+static ssize_t sbo_short_sleep_count_store(struct kobject *kobj,
+				struct kobj_attribute *attr,
+				const char *buf, size_t n)
+{
+	unsigned long val;
+
+	if (kstrtoul(buf, 10, &val))
+		return -EINVAL;
+
+	sbo_short_sleep_count = val;
+	return n;
+}
+
+static ssize_t sbo_short_sleep_count_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%u\n", sbo_short_sleep_count);
+}
+
+power_attr(sbo_short_sleep_count);
+
+static ssize_t sbo_initial_alive_time_msecs_store(struct kobject *kobj,
+				struct kobj_attribute *attr,
+				const char *buf, size_t n)
+{
+	unsigned long val;
+
+	if (kstrtoul(buf, 10, &val))
+		return -EINVAL;
+
+	sbo_initial_alive_time_msecs = val;
+	return n;
+}
+
+static ssize_t sbo_initial_alive_time_msecs_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%u\n", sbo_initial_alive_time_msecs);
+}
+
+power_attr(sbo_initial_alive_time_msecs);
+
+static ssize_t sbo_enabled_store(struct kobject *kobj,
+				struct kobj_attribute *attr,
+				const char *buf, size_t n)
+{
+	unsigned long val;
+
+	if (kstrtoul(buf, 10, &val))
+		return -EINVAL;
+
+	if (val > 1)
+		return -EINVAL;
+
+	sbo_enabled = !!val;
+	return n;
+}
+
+static ssize_t sbo_enabled_show(struct kobject *kobj,
+				struct kobj_attribute *attr, char *buf)
+{
+	return snprintf(buf, PAGE_SIZE, "%d\n", sbo_enabled);
+}
+
+power_attr(sbo_enabled);
+
+static void
+suspend_backoff(u32 timeout_msecs)
+{
+	if (!sbo_enabled)
+		return;
+
+	pr_debug("suspend: too many immediate wakeups, back off (%u msecs)\n",
+			timeout_msecs);
+
+	__pm_wakeup_event(ws, timeout_msecs);
+}
+
 static ssize_t state_store(struct kobject *kobj, struct kobj_attribute *attr,
 			   const char *buf, size_t n)
 {

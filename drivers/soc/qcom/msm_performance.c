@@ -41,12 +41,32 @@ struct events {
 };
 static struct events events_group;
 static struct task_struct *events_notify_thread;
+static unsigned int aggr_big_nr;
+static unsigned int aggr_top_load;
+static unsigned int top_load[CLUSTER_MAX];
+static unsigned int curr_cap[CLUSTER_MAX];
 
-/**************************sysfs start********************************/
-/*
- * Userspace sends cpu#:min_freq_value to vote for min_freq_value as the new
- * scaling_min. To withdraw its vote it needs to enter cpu#:0
- */
+static int touchboost = 1;
+
+/*******************************sysfs start************************************/
+static int set_touchboost(const char *buf, const struct kernel_param *kp)
+{
+	int val;
+	if (sscanf(buf, "%d\n", &val) != 1)
+		return -EINVAL;
+	touchboost = val;
+	return 0;
+}
+
+static int get_touchboost(char *buf, const struct kernel_param *kp)
+{
+	return snprintf(buf, PAGE_SIZE, "%d", touchboost);
+}
+static const struct kernel_param_ops param_ops_touchboost = {
+	.set = set_touchboost,
+	.get = get_touchboost,
+};
+device_param_cb(touchboost, &param_ops_touchboost, NULL, 0644);
 static int set_cpu_min_freq(const char *buf, const struct kernel_param *kp)
 {
 	int i, j, ntokens = 0;
@@ -56,6 +76,11 @@ static int set_cpu_min_freq(const char *buf, const struct kernel_param *kp)
 	struct cpufreq_policy policy;
 	cpumask_var_t limit_mask;
 	int ret;
+
+	if (!touchboost) {
+		pr_info("Ignored touchboost event!\n");
+		return ret;
+	}
 
 	while ((cp = strpbrk(cp + 1, " :")))
 		ntokens++;

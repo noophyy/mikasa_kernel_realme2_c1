@@ -67,8 +67,8 @@ static struct asmp_param_struct {
     .scroff_single_core = true,
     .max_cpus_bc = 4, /* Max cpu Big cluster ! */
     .max_cpus_lc = 4, /* Max cpu Little cluster ! */
-    .min_cpus_bc = 2, /* Minimum Big cluster online */
-    .min_cpus_lc = 2, /* Minimum Little cluster online */
+    .min_cpus_bc = 1, /* Minimum Big cluster online */
+    .min_cpus_lc = 1, /* Minimum Little cluster online */
     .cpufreq_up_bc = 80,
     .cpufreq_up_lc = 70,
     .cpufreq_down_bc = 25,
@@ -131,7 +131,7 @@ static int get_cpu_loads(unsigned int cpu)
         max_load = load;
 
     return max_load;
-}
+} 
 
 static void update_prev_idle(unsigned int cpu)
 {

@@ -17,7 +17,7 @@ echo
 DEFCONFIG="mikasa_defconfig"
 export KBUILD_BUILD_USER=
 export KBUILD_BUILD_HOST=
-TC_DIR="/root/kernel/proton-clang"
+TC_DIR="/workspace/proton"
 export PATH="$TC_DIR/bin:$PATH"
 
 mkdir -p out

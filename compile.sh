@@ -15,9 +15,9 @@ echo "${bold}LOADING-_-....${normal}"
 echo
 
 DEFCONFIG="mikasa_defconfig"
-export KBUILD_BUILD_USER=
+export KBUILD_BUILD_USER=@noophyy
 export KBUILD_BUILD_HOST=
-TC_DIR="/workspace/proton"
+TC_DIR="/root//proton"
 export PATH="$TC_DIR/bin:$PATH"
 
 mkdir -p out

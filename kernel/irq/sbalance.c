@@ -347,10 +347,11 @@ static int __noreturn sbalance_thread(void *data)
 		balance_irqs();
 	}
 }
-
+/*
 static int __init sbalance_init(void)
 {
 	BUG_ON(IS_ERR(kthread_run(sbalance_thread, NULL, "sbalanced")));
 	return 0;
 }
 late_initcall(sbalance_init);
+*/

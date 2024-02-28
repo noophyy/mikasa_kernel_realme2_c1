@@ -12,4 +12,9 @@ config ZRAM
 	  It has several use cases, for example: /tmp storage, use as swap
 	  disks and maybe many more.
 
-	  See zram.txt for more information.
+	  See Documentation/blockdev/zram.txt for more information.
+
+config ZRAM_SIZE_OVERRIDE
+	int "zram size to set from kernel"
+	range 1024 16348
+	default 2048

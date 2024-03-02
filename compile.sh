@@ -15,6 +15,8 @@ done
 DEFCONFIG="mikasa_defconfig"
 TC_DIR="/workspaces/clang"
 export PATH="$TC_DIR/bin:$PATH"
+export KBUILD_BUILD_USER=Nop
+export KBUILD_BUILD_HOST=Notedphy
 if [[ $1 = "-r" || $1 = "--regen" ]]; then
 make O=out ARCH=arm64 $DEFCONFIG savedefconfig
 cp out/defconfig arch/arm64/configs/$DEFCONFIG

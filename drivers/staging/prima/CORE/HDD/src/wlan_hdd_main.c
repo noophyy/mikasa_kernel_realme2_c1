@@ -8717,7 +8717,7 @@ done:
    return ret;
 }
 
-static int hdd_open_cesium_nl_sock(void)
+static int hdd_open_cesium_nl_sock()
 {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0))
    struct netlink_kernel_cfg cfg = {
@@ -8748,7 +8748,7 @@ static int hdd_open_cesium_nl_sock(void)
    return ret;
 }
 
-static void hdd_close_cesium_nl_sock(void)
+static void hdd_close_cesium_nl_sock()
 {
    if (NULL != cesium_nl_srv_sock)
    {

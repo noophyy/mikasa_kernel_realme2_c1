@@ -33,6 +33,8 @@
 #include "../sched/sched.h"
 #include "internals.h"
 
+#include <linux/kthread.h>
+
 /* Perform IRQ balancing every POLL_MS milliseconds */
 #define POLL_MS CONFIG_IRQ_SBALANCE_POLL_MSEC
 

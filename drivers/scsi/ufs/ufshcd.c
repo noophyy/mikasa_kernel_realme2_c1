@@ -6243,6 +6243,7 @@ static void ufshcd_exception_event_handler(struct work_struct *work)
 		ufshcd_bkops_exception_event_handler(hba);
 
 out:
+
 	ufshcd_scsi_unblock_requests(hba);
 	/*
 	 * pm_runtime_get_noresume is called while scheduling
@@ -6252,6 +6253,7 @@ out:
 	 */
 	pm_runtime_put_noidle(hba->dev);
 	pm_runtime_put(hba->dev);
+
 	return;
 }
 

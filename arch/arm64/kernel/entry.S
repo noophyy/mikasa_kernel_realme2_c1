@@ -107,7 +107,7 @@ alternative_cb	arm64_enable_wa2_handling
 alternative_cb_end
 	ldr_this_cpu	\tmp2, arm64_ssbd_callback_required, \tmp1
 	cbz	\tmp2, \targ
-	ldr	\tmp2, [tsk, #TI_FLAGS]
+	ldr	\tmp2, [tsk, #TSK_TI_FLAGS]
 	tbnz	\tmp2, #TIF_SSBD, \targ
 	mov	w0, #ARM_SMCCC_ARCH_WORKAROUND_2
 	mov	w1, #\state
@@ -915,14 +915,7 @@ el0_svc_naked:					// compat entry point
 	cmp     scno, sc_nr                     // check upper syscall limit
 	b.hs	ni_sys
 	mask_nospec64 scno, sc_nr, x19	// enforce bounds for syscall number
-#ifdef VENDOR_EDIT
-#ifdef CONFIG_OPPO_ROOT_CHECK
-//	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-	adr x16, oppo_root_check
-#else
 	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-#endif /* CONFIG_OPPO_ROOT_CHECK */
-#endif /* VENDOR_EDIT */
 	blr	x16				// call sys_* routine
 	b	ret_fast_syscall
 ni_sys:
@@ -953,14 +946,7 @@ __sys_trace:
 	ldp	x2, x3, [sp, #S_X2]
 	ldp	x4, x5, [sp, #S_X4]
 	ldp	x6, x7, [sp, #S_X6]
-#ifdef VENDOR_EDIT
-#ifdef CONFIG_OPPO_ROOT_CHECK
-//	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-	adr x16, oppo_root_check
-#else
 	ldr	x16, [stbl, scno, lsl #3]	// address in the syscall table
-#endif /* CONFIG_OPPO_ROOT_CHECK */
-#endif /* VENDOR_EDIT */
 	blr	x16				// call sys_* routine
 
 __sys_trace_return:

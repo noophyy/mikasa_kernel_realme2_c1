@@ -3731,10 +3731,9 @@ static int ffs_func_setup(struct usb_function *f,
 	ffs->ev.setup.wIndex = cpu_to_le16(ret);
 	__ffs_event_add(ffs, FUNCTIONFS_SETUP);
 	spin_unlock_irqrestore(&ffs->ev.waitq.lock, flags);
-
 	ffs_log("exit");
 
-	return USB_GADGET_DELAYED_STATUS;
+	return creq->wLength == 0 ? USB_GADGET_DELAYED_STATUS : 0;
 }
 
 static bool ffs_func_req_match(struct usb_function *f,

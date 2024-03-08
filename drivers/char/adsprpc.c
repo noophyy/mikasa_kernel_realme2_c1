@@ -1509,7 +1509,7 @@ static int get_args(uint32_t kernel, struct smq_invoke_ctx *ctx)
 	lrpra = ctx->lbuf->virt;
 	ctx->lrpra = lrpra;
 
-	/* calculate len requreed for copying */
+	/* calculate len required for copying */
 	for (oix = 0; oix < inbufs + outbufs; ++oix) {
 		int i = ctx->overps[oix]->raix;
 		uintptr_t mstart, mend;
@@ -1686,7 +1686,8 @@ static int get_args(uint32_t kernel, struct smq_invoke_ctx *ctx)
 		rpra[i].dma.len = lrpra[i].dma.len = (uint32_t)lpra[i].buf.len;
 		rpra[i].dma.offset = lrpra[i].dma.offset =
 			 (uint32_t)(uintptr_t)lpra[i].buf.pv;
- 	}
+
+	}
 
  bail:
 	return err;
@@ -1810,7 +1811,7 @@ static void inv_args(struct smq_invoke_ctx *ctx)
 {
 	int i, inbufs, outbufs;
 	uint32_t sc = ctx->sc;
-	remote_arg64_t *rpra = ctx->rpra;
+	remote_arg64_t *rpra = ctx->lrpra;
 
 	inbufs = REMOTE_SCALARS_INBUFS(sc);
 	outbufs = REMOTE_SCALARS_OUTBUFS(sc);

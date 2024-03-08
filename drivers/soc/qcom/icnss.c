@@ -1326,7 +1326,7 @@ static int wlfw_msa_mem_info_send_sync_msg(void)
 	struct wlfw_msa_info_req_msg_v01 req;
 	struct wlfw_msa_info_resp_msg_v01 resp;
 	struct msg_desc req_desc, resp_desc;
-    uint64_t max_mapped_addr;
+	uint64_t max_mapped_addr;
 
 	if (!penv || !penv->wlfw_clnt)
 		return -ENODEV;
@@ -1373,21 +1373,24 @@ static int wlfw_msa_mem_info_send_sync_msg(void)
 		goto out;
 	}
 
-    max_mapped_addr = penv->msa_pa + penv->msa_mem_size;
+	max_mapped_addr = penv->msa_pa + penv->msa_mem_size;
 	penv->stats.msa_info_resp++;
 	penv->nr_mem_region = resp.mem_region_info_len;
 	for (i = 0; i < resp.mem_region_info_len; i++) {
-       if (resp.mem_region_info[i].size > penv->msa_mem_size ||
-            resp.mem_region_info[i].region_addr > max_mapped_addr ||
-            resp.mem_region_info[i].region_addr < penv->msa_pa ||
-            resp.mem_region_info[i].size +
-            resp.mem_region_info[i].region_addr > max_mapped_addr) {
-            icnss_pr_dbg("Received out of range Addr: 0x%llx Size: 0x%x\n",
-                    resp.mem_region_info[i].region_addr,
-                    resp.mem_region_info[i].size);
-            ret = -EINVAL;
-            goto fail_unwind;
-        }
+
+		if (resp.mem_region_info[i].size > penv->msa_mem_size ||
+		    resp.mem_region_info[i].region_addr > max_mapped_addr ||
+		    resp.mem_region_info[i].region_addr < penv->msa_pa ||
+		    resp.mem_region_info[i].size +
+		    resp.mem_region_info[i].region_addr > max_mapped_addr) {
+			icnss_pr_dbg("Received out of range Addr: 0x%llx Size: 0x%x\n",
+					resp.mem_region_info[i].region_addr,
+					resp.mem_region_info[i].size);
+			ret = -EINVAL;
+			goto fail_unwind;
+		}
+
+>>>>>>> c691692f1a57b4d6eedf4d770bff1c0c4b978fac
 		penv->mem_region[i].reg_addr =
 			resp.mem_region_info[i].region_addr;
 		penv->mem_region[i].size =
@@ -1403,8 +1406,7 @@ static int wlfw_msa_mem_info_send_sync_msg(void)
 	return 0;
 
 fail_unwind:
-    memset(&penv->mem_region[0], 0, sizeof(penv->mem_region[0]) * i);
-
+	memset(&penv->mem_region[0], 0, sizeof(penv->mem_region[0]) * i);
 out:
 	penv->stats.msa_info_err++;
 	ICNSS_QMI_ASSERT();

@@ -306,16 +306,15 @@ static int qcom_smem_alloc_private(struct qcom_smem *smem,
 	void *cached;
 	void *p_end;
 
+
 	phdr = ptable_entry_to_phdr(entry);
 	p_end = (void *)phdr + le32_to_cpu(entry->size);
-	
 	hdr = phdr_to_first_private_entry(phdr);
 	end = phdr_to_last_private_entry(phdr);
 	cached = phdr_to_first_cached_entry(phdr);
 
 	if (WARN_ON((void *)end > p_end || (void *)cached > p_end))
 		return -EINVAL;
-
 
 	while (hdr < end) {
 		if (hdr->canary != SMEM_PRIVATE_CANARY) {
@@ -429,7 +428,7 @@ int qcom_smem_alloc(unsigned host, unsigned item, size_t size)
 	} else {
 		ret = qcom_smem_alloc_global(__smem, item, size);
 	}
-	
+
 	hwspin_unlock_irqrestore(__smem->hwlock, &flags);
 
 	return ret;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2019, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -822,6 +822,7 @@ int32_t qpnp_vadc_hc_read(struct qpnp_vadc_chip *vadc,
 				QPNP_VADC_CAL_DELAY_CTL_1, &val, 1);
 		if (rc < 0) {
 			pr_err("qpnp adc write cal_delay failed with %d\n", rc);
+
 #ifdef ODM_WT_EDIT
 /*Hanxing.Duan@ODB.RH.BSP.CHG.Basic fix do not release adc_lock 2019.07.29*/
 			goto fail_unlock;

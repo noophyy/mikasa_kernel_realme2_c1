@@ -384,7 +384,6 @@ ashmem_vmfile_get_unmapped_area(struct file *file, unsigned long addr,
 	return current->mm->get_unmapped_area(file, addr, len, pgoff, flags);
 }
 
-
 static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
 {
 	static struct file_operations vmfile_fops;
@@ -422,7 +421,7 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
 		}
 		vmfile->f_mode |= FMODE_LSEEK;
 		asma->file = vmfile;
-        	/*
+		/*
 		 * override mmap operation of the vmfile so that it can't be
 		 * remapped which would lead to creation of a new vma with no
 		 * asma permission checks. Have to override get_unmapped_area

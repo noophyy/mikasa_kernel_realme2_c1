@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2019, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1897,12 +1897,15 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 		/* prevent core from generating interrupts until recovery */
 		reg = dwc3_msm_read_reg(mdwc->base, DWC3_GCTL);
 		reg |= DWC3_GCTL_CORESOFTRESET;
-		dwc3_msm_write_reg(mdwc->base, DWC3_GCTL, reg);
+	        
+
+
 #ifndef ODM_WT_EDIT
 /*Hanxing.Duan@ODM.RH.BSP.USB.Basic  Disable device events after maximum error retries   2019.7.23 */
 		/* restart USB which performs full reset and reconnect */
 		schedule_work(&mdwc->restart_usb_work);
 #else /*ODM_WT_EDIT*/
+
 		/*
 		 * If the core could not recover after MAX_ERROR_RECOVERY_TRIES,
 		 * skip the restart USB work and keep the core in softreset
@@ -1910,6 +1913,7 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 		 */
 		if (dwc->retries_on_error < MAX_ERROR_RECOVERY_TRIES)
 			schedule_work(&mdwc->restart_usb_work);
+
 #endif /*ODM_WT_EDIT*/
 		break;
 	case DWC3_CONTROLLER_RESET_EVENT:

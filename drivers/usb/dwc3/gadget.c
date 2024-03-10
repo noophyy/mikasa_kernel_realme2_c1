@@ -2037,6 +2037,7 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
 	} else {
 		dbg_event(0xFF, "Pullup_disable", is_on);
 		dwc3_gadget_disable_irq(dwc);
+
 #ifdef ODM_WT_EDIT
 /*Hanxing.Duan@ODM.RH.BSP.USB.Basic  Disable the irq before clearing run_stop bit  2019.7.23*/
 		/* Mask all interrupts */
@@ -3731,6 +3732,7 @@ static irqreturn_t dwc3_process_event_buf(struct dwc3 *dwc)
 			if (dwc3_notify_event(dwc,
 						DWC3_CONTROLLER_ERROR_EVENT, 0))
 				dwc->err_evt_seen = 0;
+
 #ifdef ODM_WT_EDIT
 			dwc->retries_on_error++;
 #endif /*ODM_WT_EDIT*/

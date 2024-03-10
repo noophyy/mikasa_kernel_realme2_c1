@@ -1,4 +1,4 @@
-/**
+ /**
  * core.h - DesignWare USB3 DRD Core Header
  *
  * Copyright (C) 2010-2011 Texas Instruments Incorporated - http://www.ti.com
@@ -44,6 +44,7 @@
 #define DWC3_EP0_BOUNCE_SIZE	512
 #define DWC3_ENDPOINTS_NUM	32
 #define DWC3_XHCI_RESOURCES_NUM	2
+
 #ifdef ODM_WT_EDIT
 /*Hanxing.Duan@ODM.RH.BSP.USB.Basic  Disable device events after maximum error retries     2019.7.23 */
 #define MAX_ERROR_RECOVERY_TRIES	3
@@ -1181,7 +1182,7 @@ struct dwc3 {
 	struct dwc3_gadget_events	dbg_gadget_events;
 	bool			create_reg_debugfs;
 	u32			xhci_imod_value;
-	int			core_id;
+	int          		core_id;
 #ifdef ODM_WT_EDIT
 	int			retries_on_error;
 #endif /*ODM_WT_EDIT*/

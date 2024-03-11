@@ -207,6 +207,7 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
 	register unsigned long r3 SMCCC_REG(3)
 
 #define __declare_arg_1(a0, a1, res)					\
+	typeof(a1) __a1 = a1;						\
 	struct arm_smccc_res   *___res = res;				\
 	register u32           r0 SMCCC_REG(0) = a0;			\
 	register typeof(a1)    r1 SMCCC_REG(1) = a1;			\
@@ -214,6 +215,8 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
 	register unsigned long r3 SMCCC_REG(3)
 
 #define __declare_arg_2(a0, a1, a2, res)				\
+	typeof(a1) __a1 = a1;						\
+	typeof(a2) __a2 = a2;						\
 	struct arm_smccc_res   *___res = res;				\
 	register u32           r0 SMCCC_REG(0) = a0;			\
 	register typeof(a1)    r1 SMCCC_REG(1) = a1;			\
@@ -221,25 +224,32 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
 	register unsigned long r3 SMCCC_REG(3)
 
 #define __declare_arg_3(a0, a1, a2, a3, res)				\
+	typeof(a1) __a1 = a1;						\
+	typeof(a2) __a2 = a2;						\
+	typeof(a3) __a3 = a3;						\
 	struct arm_smccc_res   *___res = res;				\
 	register u32           r0 SMCCC_REG(0) = a0;			\
 	register typeof(a1)    r1 SMCCC_REG(1) = a1;			\
 	register typeof(a2)    r2 SMCCC_REG(2) = a2;			\
-	register typeof(a3)    r3 SMCCC_REG(3) = a3
+	register typeof(a3)    r3 SMCCC_REG(3) = a3;
 
 #define __declare_arg_4(a0, a1, a2, a3, a4, res)			\
+	typeof(a4) __a4 = a4;						\
 	__declare_arg_3(a0, a1, a2, a3, res);				\
 	register typeof(a4) r4 SMCCC_REG(4) = a4
 
 #define __declare_arg_5(a0, a1, a2, a3, a4, a5, res)			\
+	typeof(a5) __a5 = a5;						\
 	__declare_arg_4(a0, a1, a2, a3, a4, res);			\
-	register typeof(a5) r5 SMCCC_REG(5) = a5
+        register typeof(a5) r5 SMCCC_REG(5) = a5
 
 #define __declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res)		\
+	typeof(a6) __a6 = a6;						\
 	__declare_arg_5(a0, a1, a2, a3, a4, a5, res);			\
 	register typeof(a6) r6 SMCCC_REG(6) = a6
 
 #define __declare_arg_7(a0, a1, a2, a3, a4, a5, a6, a7, res)		\
+	typeof(a7) __a7 = a7;						\
 	__declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res);		\
 	register typeof(a7) r7 SMCCC_REG(7) = a7
 

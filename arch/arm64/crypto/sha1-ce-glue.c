@@ -40,9 +40,6 @@ static inline void __cfi_sha1_ce_transform(struct sha1_state *sst,
 const u32 sha1_ce_offsetof_count = offsetof(struct sha1_ce_state, sst.count);
 const u32 sha1_ce_offsetof_finalize = offsetof(struct sha1_ce_state, finalize);
 
-const u32 sha1_ce_offsetof_count = offsetof(struct sha1_ce_state, sst.count);
-const u32 sha1_ce_offsetof_finalize = offsetof(struct sha1_ce_state, finalize);
-
 static int sha1_ce_update(struct shash_desc *desc, const u8 *data,
 			  unsigned int len)
 {
@@ -61,7 +58,7 @@ static int sha1_ce_finup(struct shash_desc *desc, const u8 *data,
 			 unsigned int len, u8 *out)
 {
 	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-	bool finalize = !sctx->sst.count && !(len % SHA1_BLOCK_SIZE);
+	bool finalize = !sctx->sst.count && !(len % SHA1_BLOCK_SIZE) && len;
 
 	/*
 	 * Allow the asm code to perform the finalization if there is no
